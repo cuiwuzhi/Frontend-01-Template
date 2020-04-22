@@ -45,8 +45,8 @@
     - IdentifierName
     - Punctuator
     - Template
-    - [NumericLiteral]
-    - [StringLiteral]
+    - [NumericLiteral](https://github.com/cuiwuzhi/Frontend-01-Template/blob/master/week02/NumericLiterals.md)
+    - [StringLiteral](https://github.com/cuiwuzhi/Frontend-01-Template/blob/master/week02/StringLiterals.md)
     
 #### 基本类型
 - Type
