@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .contianer > div {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #ccc;
+      transition: background 0.5s ease;
+    }
+    .red.light{
+      background: red;
+    }
+    .yellow.light{
+      background: yellow;
+    }
+    .green.light{
+      background: green;
+    }
+  </style>
+</head>
+<body>
+  <section class="contianer">
+    <div class=red></div>
+    <div class=yellow></div>
+    <div class=green></div>
+  </section>
+  <button id=next>next</button>
+  <button id="toggleAuto">模式切换</button>
+  <script>
+      function sleep(t) {
+        return new Promise((resolve) => {
+          setTimeout(resolve, t)
+        })
+      }
+      function light(color) {
+        const div = document.querySelectorAll('.contianer > div')
+        for (let i=0; i < div.length; i++) {
+          div[i].classList.remove('light')
+        }
+        document.getElementsByClassName(color)[0].classList.add('light')
+      }
+      function happen(element, eventName) {
+        return new Promise(resolve => {
+          element.addEventListener(eventName, resolve, {once: true})
+        })
+      }
+      async function run() {
+        let l = {
+          red: 1000,
+          yellow: 1000,
+          green: 1000
+        }
+        while(true) {
+          for (let [color, time] of Object.entries(l)){
+            light(color)
+            if (auto) {
+              await sleep(time)
+            } else{
+              await happen(document.getElementById('next'), 'click')
+            }
+          }
+        }
+      }
+      let auto = true
+      document.getElementById('toggleAuto').addEventListener('click', () =>{
+        auto = !auto
+        if (auto) {
+          run()
+        }
+      })
+      run()
+  </script>
+</body>
+</html>

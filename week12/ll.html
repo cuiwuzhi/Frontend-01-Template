@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使用LL算法构建AST</title>
+</head>
+<body>
+  <script>
+    const regexp = /([0-9\.]+)|([ ]+)|([/r/n])|(\+)|(\-)|(\*)|(\/)/g
+    const dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/']
+    function *tokenzie(code) {
+      let result = null
+      let lastIndex = 0
+      while(true) {
+        lastIndex = regexp.lastIndex
+        result = regexp.exec(code)
+        if (!result) {
+          break
+        }
+        if (regexp.lastIndex - lastIndex > result[0].length) {
+          throw new Error(`Unexpectd token ${code.slice(lastIndex,regexp.lastIndex - result[0].length)}`)
+        }
+        const token = {
+          type: null,
+          value: null
+        }
+        for (let i = 0; i < result.length; i++) {
+          if (result[i+1]) {
+            token.type = dictionary[i]
+          }
+        }
+        token.value = result[0]
+        yield token
+      }
+      yield {type: "EOF"}
+    }
+    // 词法分析
+    let source = []
+    for(let token of tokenzie('5 + 1024 * 2')) {
+      if (token.type !== 'Whitespace' && token.type !== 'LineTerminator') {
+        source.push(token)
+      }
+    }
+    let s = Expression(source)
+    console.log(s)
+
+    function Expression(source) {
+      if (source[0].type === 'AdditiveExpression' && source[1].type === 'EOF') {
+        let node = {
+          type: 'Expression',
+          children: [source.shift(), source.shift()]
+        }
+        source.unshift(node)
+        return node
+      }
+      AdditiveExpression(source)
+      return Expression(source)
+    }
+
+    function AdditiveExpression(source) {
+      if (source[0].type === 'Number') {
+        MultiplicativeExpression(source)
+        return AdditiveExpression(source)
+      }
+      if (source[0].type === 'MultiplicativeExpression') {
+        let node = {
+          type: 'AdditiveExpression',
+          children: [source.shift()]
+        }
+        source.unshift(node)
+        return AdditiveExpression(source)
+      }
+      if (source[0].type === 'AdditiveExpression' && 
+        source.length > 1 &&
+        (
+          source[1].type === '+' ||
+          source[1].type === '-'
+        )
+      ) {
+        let node = {
+          type: 'AdditiveExpression',
+          children: [source.shift(), source.shift()]
+        }
+        MultiplicativeExpression(source)
+        node.children.push(source.shift())
+        source.unshift(node)
+        return AdditiveExpression(source)
+      }
+      if (source[0].type === 'AdditiveExpression')
+        return source[0]
+
+      throw new Error('AdditiveExpression error')
+    }
+
+    function MultiplicativeExpression(source) {
+      if (source[0].type === 'Number') {
+        let node = {
+          type: 'MultiplicativeExpression',
+          children: source.shift()
+        }
+        source.unshift(node)
+        return MultiplicativeExpression(source)
+      }
+      if (source[0].type === 'MultiplicativeExpression' &&
+        source.length > 1 &&
+        (
+          source[1].type === '*' ||
+          source[1].type === '/'
+        )
+      ) {
+        let node = {
+          type: 'MultiplicativeExpression',
+          children: [source.shift(), source.shift(), source.shift()]
+        }
+        source.unshift(node)
+        return MultiplicativeExpression(source)
+      }
+      if (source[0].type === 'MultiplicativeExpression') {
+        return source[0]
+      }
+
+      throw new Error('MultiplicativeExpression error')
+    }
+  </script>
+</body>
+</html>
