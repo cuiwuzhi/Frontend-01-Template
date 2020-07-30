@@ -1,0 +1,27 @@
+<style>
+  #el{
+      width: 100px;
+      height: 100px;
+      background-color: pink;
+
+  }
+</style>
+<div id="el"></div>
+<button onclick="start()">start</button>
+<button onclick="stop()">stop</button>
+<script>
+let el= document.getElementById('el')
+el.style.transition ="ease 5s"
+
+function start(){
+  el.style.transform = "translate(300px, 300px)"
+}
+function stop(){
+
+  el.style.transform = getComputedStyle(el).transform//transition 在transform后面,才能让元素停在中间的位置，而不是马上停在终点位置
+  //但是尝试用css去控制元素悬停仍然有问题：得出来的是transform的matrices矩阵，很难去反算悬停后应该继续从哪里transform的位置：因此不建议用cssStyle去控制元素走停，而是应用js
+  el.style.transition = "none"
+
+}
+
+</script>

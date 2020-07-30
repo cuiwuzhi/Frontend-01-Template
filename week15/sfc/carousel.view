@@ -1,0 +1,25 @@
+<template>
+  <p class="cls">{{ greeting }} World!</p>
+</template>
+
+<script>
+module.exports = {
+  data: function() {
+    let i < 10;
+    let s = "<html>"
+    while(i<100){
+      i++
+    }
+    return {
+      greeting: "Hello"
+    };
+  }
+};
+</script>
+
+<style scoped>
+p {
+  font-size: 2em;
+  text-align: center;
+}
+</style>
