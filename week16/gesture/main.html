@@ -1,0 +1,32 @@
+<body>
+  <div id="el" style="width: 100px;;height: 100px;transform: translate(0px,0px);background-color: lightblue;">
+
+  </div>
+</body>
+<script src="./gesture.js">
+</script>
+<script>
+  //禁掉contextmenu右键菜单
+  window.addEventListener("contextmenu",event=>event.preventDefault())
+  document.addEventListener("selectstart",event=>event.preventDefault())
+  //移动端禁掉上下滚动的功能
+  document.addEventListener("touchmove",event=>event.preventDefault(),{passive:false})
+  //当然以上的禁止还应该配合guesture的节点去处理的
+
+  let x = 0,y=0;
+  let myElement = document.getElementById('el')
+  enableGesture(myElement)
+  //panstart的时候记录它的位置
+  myElement.addEventListener('panstart',event=>{
+      console.log('panstart!!!!',event)
+  })
+  myElement.addEventListener('panmove',({detail:event})=>{
+      console.log('panmove!!!!',event)
+      myElement.style.transform = `translate(${ x +event.clientX - event.startX}px,${y+event.clientY - event.startY}px)`
+  })
+  myElement.addEventListener('panend',({detail:event})=>{
+      console.log('panend!!!!',event)
+      x=  x +event.clientX - event.startX
+      y = y+event.clientY - event.startY
+  })
+</script>
