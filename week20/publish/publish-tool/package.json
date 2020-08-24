@@ -1,0 +1,21 @@
+{
+  "name": "publish-tool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "cml",
+    "tool"
+  ],
+  "author": "keelia",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^5.0.0",
+    "child_process": "^1.0.2",
+    "querystring": "^0.2.0"
+  }
+}
