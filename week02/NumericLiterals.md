@@ -1,124 +1,49 @@
-### Numeric Literals
+## js 语言设计
 
-```js
-/^(\.\d+|(0|[1-9]\d*)\.?\d*?)([eE][-\+]?\d+)?$|^0[bB][01]+$|^0[oO][0-7]+$|^0[xX][0-9a-fA-F]+$/
-```
-NumericLiteral :
-  - DecimalLiteral
-  - BinaryIntegerLiteral
-  - OctalIntegerLiteral
-  - HexIntegerLiteral
+### 编程语言通识
 
-```js
-/^(\.\d+|(0|[1-9]\d*)\.?\d*?)([eE][-\+]?\d+)?$/
-```
-DecimalLiteral ::
-  - DecimalIntegerLiteral . DecimalDigits(opt) ExponentPart(opt)
-  - . DecimalDigits ExponentPart(opt)
-  - DecimalIntegerLiteral ExponentPart 
+#### 语言按语法分类
 
-```js
-/^0|[1-9]\d*$/
-```
-DecimalIntegerLiteral ::
-  - 0
-  - NonZeroDigit DecimalDigits(opt)
+    1. 非形式语言
+      中文，英文
+    2. 形式语言（乔姆斯基谱系）
+      0型： 无限制文法
+      1型： 上下文相关文法
+      2型： 上下文无关文法
+      3型： 正则文法
 
-```js
-/^\d+$/
-```
-DecimalDigits ::
-  - DecimalDigit
-  - DecimalDigits DecimalDigit
+相关网站：
+https://zh.wikipedia.org/wiki/終結符與非終結符
+https://zh.wikipedia.org/wiki/巴科斯范式
+https://github.com/AssemblyScript/assemblyscript/blob/master/src/parser.ts
 
-```js
-/^\d$/
-```
-DecimalDigit :: one of
-  - 0 1 2 3 4 5 6 7 8 9
+## js 词法类型
 
-```js
-/^[1-9]$/
-```
-NonZeroDigit :: one of
-  - 1 2 3 4 5 6 7 8 9
+InputElement（词法）
 
-```js
-/^[eE][-\+]?\d+$/
-```
-ExponentPart ::
-  - ExponentIndicator SignedInteger
+1. WhiteSpace(空格)
+2. LineTerminator(换行/回车)
+3. Comment(注释)
+4. Token（标记）
+   4.1 Punctuator
+   4.2 IdentifierName
 
-```js
-/^[eE]$/
-```
-ExponentIndicator :: one of  
-  - e E
+4.2.1 Keywords
+4.2.2 Identifier
+4.2.3 Funture reserved Keywords: enum
 
-```js
-/^[-\+]?\d+$/
-```
-SignedInteger ::
-  - DecimalDigits
-  - + DecimalDigits
-  - - DecimalDigits
+5. Literal
+   Number(IEEE 754 Double Float)
+   浮点数比较: Math.abs(0.1 + 0.2 - 0.3) < Number.EPSILON
+   String
+   支持码点: U+0000 ~ U+10FFFF， 但推荐只使用 U+0000 ~ U+FFFF （BMP）
+   存储方式: UTF8/UTF16
 
-```js
-/^0[bB][01]+$/
-```
-BinaryIntegerLiteral ::
-  - 0b BinaryDigits
-  - 0B BinaryDigits
+   Boolean
+   Null
+   Undifined
+   Symbol
 
-```js
-/^[01]+$/
-```
-BinaryDigits ::
-  - BinaryDigit
-  - BinaryDigits BinaryDigit
-
-```js
-/^[01]$/
-```
-BinaryDigit :: one of
-  - 0 1
-
-```js
-/^0[oO][0-7]+$/
-```
-OctalIntegerLiteral ::
-  - 0o OctalDigits
-  - 0O OctalDigits
-
-```js
-/^[0-7]+$/
-```
-OctalDigits ::
-  - OctalDigit
-  - OctalDigits OctalDigit
-
-```js
-/^[0-7]$/
-```
-OctalDigit :: one of
-  - 0 1 2 3 4 5 6 7
-
-```js
-/^0[xX][0-9a-fA-F]+$/
-```
-HexIntegerLiteral ::
-  - 0x HexDigits
-  - 0X HexDigits
-
-```js
-/^[0-9a-fA-F]+$/
-```
-HexDigits ::
-  - HexDigit
-  - HexDigits HexDigit
-
-```js
-/^[0-9a-fA-F]$/
-```
-HexDigit :: one of
-  - 0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F
+相关网站：
+unicode 官网：https://home.unicode.org/
+http://www.fileformat.info/info/unicode/
